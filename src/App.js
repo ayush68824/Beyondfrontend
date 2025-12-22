@@ -12,7 +12,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedArticle, setSelectedArticle] = useState(null);
-  const [filter, setFilter] = useState('all'); // 'all', 'original', 'updated'
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     fetchArticles();
@@ -101,4 +101,3 @@ function App() {
 }
 
 export default App;
-

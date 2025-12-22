@@ -59,13 +59,11 @@ function ArticleDetail({ article, onBack, apiUrl }) {
   const formatContent = (content) => {
     if (!content) return 'No content available';
     
-    // Convert markdown-style links to HTML
     let formatted = content.replace(
       /\[([^\]]+)\]\(([^)]+)\)/g,
       '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
     );
     
-    // Convert line breaks to paragraphs
     const paragraphs = formatted.split('\n\n').filter(p => p.trim());
     return paragraphs.map((para, idx) => (
       <p key={idx} dangerouslySetInnerHTML={{ __html: para }} />
@@ -155,4 +153,3 @@ function ArticleDetail({ article, onBack, apiUrl }) {
 }
 
 export default ArticleDetail;
-
