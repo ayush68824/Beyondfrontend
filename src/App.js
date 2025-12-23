@@ -34,8 +34,16 @@ function App() {
         setArticles(response.data);
       }
     } catch (err) {
-      setError('Failed to fetch articles. Please make sure the API is running.');
+      const errorMessage = err.response 
+        ? `API Error (${err.response.status}): ${err.response.data?.message || err.response.statusText || 'Server error'}. Please check if the backend API is running correctly.`
+        : err.request
+        ? 'Network Error: Unable to reach the API. Please check the API URL and ensure the backend is running.'
+        : 'Failed to fetch articles. Please make sure the API is running.';
+      
+      setError(errorMessage);
       console.error('Error fetching articles:', err);
+      console.error('Response:', err.response?.data);
+      console.error('API URL:', API_URL);
     } finally {
       setLoading(false);
     }
