@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './App.css';
 import ArticleList from './components/ArticleList';
@@ -14,11 +14,7 @@ function App() {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [filter, setFilter] = useState('all');
 
-  useEffect(() => {
-    fetchArticles();
-  }, [filter]);
-
-  const fetchArticles = async () => {
+  const fetchArticles = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -43,7 +39,11 @@ function App() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchArticles();
+  }, [fetchArticles]);
 
   const handleArticleClick = (article) => {
     setSelectedArticle(article);

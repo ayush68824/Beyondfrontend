@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './ArticleDetail.css';
 
@@ -6,15 +6,7 @@ function ArticleDetail({ article, onBack, apiUrl }) {
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (article.is_updated && article.original_article_id) {
-      fetchOriginalArticle();
-    } else if (!article.is_updated) {
-      fetchUpdatedVersions();
-    }
-  }, [article]);
-
-  const fetchOriginalArticle = async () => {
+  const fetchOriginalArticle = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get(`${apiUrl}/articles/${article.original_article_id}`);
@@ -26,9 +18,9 @@ function ArticleDetail({ article, onBack, apiUrl }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiUrl, article.original_article_id]);
 
-  const fetchUpdatedVersions = async () => {
+  const fetchUpdatedVersions = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get(`${apiUrl}/articles?original_article_id=${article.id}`);
@@ -42,7 +34,15 @@ function ArticleDetail({ article, onBack, apiUrl }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiUrl, article.id]);
+
+  useEffect(() => {
+    if (article.is_updated && article.original_article_id) {
+      fetchOriginalArticle();
+    } else if (!article.is_updated) {
+      fetchUpdatedVersions();
+    }
+  }, [article, fetchOriginalArticle, fetchUpdatedVersions]);
 
   const formatDate = (dateString) => {
     if (!dateString) return 'No date';
